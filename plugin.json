@@ -2,11 +2,16 @@
   "name": "mlflow-hp-analyzer",
   "version": "0.1.0",
   "description": "Claude Code plugin for conversational analysis of MLflow experiments and hyperparameter tuning runs",
+  "author": "Felipe Drummond",
+  "repository": "github.com/FelipeDrummond/mlflow-hp-analyzer",
   "mcp": {
     "servers": {
       "mlflow-server": {
         "command": "python",
-        "args": ["${CLAUDE_PLUGIN_ROOT}/mcp/mlflow-server/server.py"]
+        "args": ["${CLAUDE_PLUGIN_ROOT}/mcp/mlflow-server/server.py"],
+        "env": {
+          "MLFLOW_TRACKING_URI": "${MLFLOW_TRACKING_URI}"
+        }
       }
     }
   },
