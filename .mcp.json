@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "mlflow-hp-analyzer": {
+      "command": "python",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/mcp/mlflow-server/server.py"],
+      "env": {
+        "MLFLOW_TRACKING_URI": "${MLFLOW_TRACKING_URI:-http://localhost:5000}"
+      },
+      "cwd": "${CLAUDE_PLUGIN_ROOT}"
+    }
+  }
+}
