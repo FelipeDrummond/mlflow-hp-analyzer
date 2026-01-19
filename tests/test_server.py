@@ -1,13 +1,14 @@
 """Tests for the MCP server."""
 
 import json
+from unittest.mock import patch
+
 import pytest
-from unittest.mock import patch, MagicMock
 
 from src.mlflow_server.server import (
     _runs_to_dataframe,
-    list_tools,
     call_tool,
+    list_tools,
 )
 
 

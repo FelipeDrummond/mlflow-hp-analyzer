@@ -12,19 +12,18 @@ Assumptions and Limitations:
   tool calls to fail with descriptive error messages.
 """
 
-import os
 import json
+import os
 from typing import Any
 
 import mlflow
-from mlflow.tracking import MlflowClient
-import pandas as pd
 import numpy as np
-from sklearn.ensemble import RandomForestRegressor
-
+import pandas as pd
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
-from mcp.types import Tool, TextContent
+from mcp.types import TextContent, Tool
+from mlflow.tracking import MlflowClient
+from sklearn.ensemble import RandomForestRegressor
 
 server = Server("mlflow-hp-analyzer")
 
@@ -187,7 +186,11 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         elif name == "get_experiment_runs":
             experiment = client.get_experiment_by_name(arguments["experiment_name"])
             if not experiment:
-                return [TextContent(type="text", text=f"Experiment '{arguments['experiment_name']}' not found")]
+                return [
+                    TextContent(
+                        type="text", text=f"Experiment '{arguments['experiment_name']}' not found"
+                    )
+                ]
 
             max_results = arguments.get("max_results", 100)
             runs = client.search_runs(
@@ -200,7 +203,11 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         elif name == "get_best_runs":
             experiment = client.get_experiment_by_name(arguments["experiment_name"])
             if not experiment:
-                return [TextContent(type="text", text=f"Experiment '{arguments['experiment_name']}' not found")]
+                return [
+                    TextContent(
+                        type="text", text=f"Experiment '{arguments['experiment_name']}' not found"
+                    )
+                ]
 
             metric = arguments["metric"]
             k = arguments.get("k", 5)
@@ -225,14 +232,22 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         elif name == "compute_param_correlations":
             experiment = client.get_experiment_by_name(arguments["experiment_name"])
             if not experiment:
-                return [TextContent(type="text", text=f"Experiment '{arguments['experiment_name']}' not found")]
+                return [
+                    TextContent(
+                        type="text", text=f"Experiment '{arguments['experiment_name']}' not found"
+                    )
+                ]
 
             runs = client.search_runs(experiment_ids=[experiment.experiment_id], max_results=500)
             df = _runs_to_dataframe(runs)
 
             metric_col = f"metric.{arguments['metric']}"
             if metric_col not in df.columns:
-                return [TextContent(type="text", text=f"Metric '{arguments['metric']}' not found in runs")]
+                return [
+                    TextContent(
+                        type="text", text=f"Metric '{arguments['metric']}' not found in runs"
+                    )
+                ]
 
             param_cols = [c for c in df.columns if c.startswith("param.")]
             correlations = {}
@@ -253,14 +268,22 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         elif name == "compute_param_importance":
             experiment = client.get_experiment_by_name(arguments["experiment_name"])
             if not experiment:
-                return [TextContent(type="text", text=f"Experiment '{arguments['experiment_name']}' not found")]
+                return [
+                    TextContent(
+                        type="text", text=f"Experiment '{arguments['experiment_name']}' not found"
+                    )
+                ]
 
             runs = client.search_runs(experiment_ids=[experiment.experiment_id], max_results=500)
             df = _runs_to_dataframe(runs)
 
             metric_col = f"metric.{arguments['metric']}"
             if metric_col not in df.columns:
-                return [TextContent(type="text", text=f"Metric '{arguments['metric']}' not found in runs")]
+                return [
+                    TextContent(
+                        type="text", text=f"Metric '{arguments['metric']}' not found in runs"
+                    )
+                ]
 
             param_cols = [c for c in df.columns if c.startswith("param.")]
             X_data = {}
@@ -273,7 +296,11 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                     continue
 
             if len(X_data) < 2:
-                return [TextContent(type="text", text="Not enough numeric parameters for importance analysis")]
+                return [
+                    TextContent(
+                        type="text", text="Not enough numeric parameters for importance analysis"
+                    )
+                ]
 
             X = pd.DataFrame(X_data)
             y = df[metric_col]
@@ -281,15 +308,22 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             X, y = X[mask], y[mask]
 
             if len(X) < 10:
-                return [TextContent(type="text", text="Not enough valid data points for importance analysis")]
+                return [
+                    TextContent(
+                        type="text", text="Not enough valid data points for importance analysis"
+                    )
+                ]
 
             rf = RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=-1)
             rf.fit(X, y)
 
-            importance = dict(zip(
-                [c.replace("param.", "") for c in X.columns],
-                [round(imp, 4) for imp in rf.feature_importances_],
-            ))
+            importance = dict(
+                zip(
+                    [c.replace("param.", "") for c in X.columns],
+                    [round(imp, 4) for imp in rf.feature_importances_],
+                    strict=False,
+                )
+            )
             sorted_importance = dict(sorted(importance.items(), key=lambda x: x[1], reverse=True))
             return [TextContent(type="text", text=json.dumps(sorted_importance, indent=2))]
 
@@ -308,4 +342,5 @@ async def main():
 
 if __name__ == "__main__":
     import asyncio
+
     asyncio.run(main())

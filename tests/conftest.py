@@ -1,9 +1,8 @@
 """Pytest configuration and fixtures for MCP server tests."""
 
 import sys
-from pathlib import Path
-from unittest.mock import MagicMock
 from dataclasses import dataclass
+from pathlib import Path
 
 import pytest
 
@@ -14,6 +13,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 @dataclass
 class MockRunInfo:
     """Mock MLflow RunInfo object."""
+
     run_id: str
     run_name: str
     status: str
@@ -24,6 +24,7 @@ class MockRunInfo:
 @dataclass
 class MockRunData:
     """Mock MLflow RunData object."""
+
     params: dict
     metrics: dict
 
@@ -31,6 +32,7 @@ class MockRunData:
 @dataclass
 class MockRun:
     """Mock MLflow Run object."""
+
     info: MockRunInfo
     data: MockRunData
 
@@ -38,6 +40,7 @@ class MockRun:
 @dataclass
 class MockExperiment:
     """Mock MLflow Experiment object."""
+
     experiment_id: str
     name: str
     artifact_location: str
@@ -47,6 +50,7 @@ class MockExperiment:
 @dataclass
 class MockMetricHistory:
     """Mock MLflow Metric history entry."""
+
     step: int
     value: float
     timestamp: int
