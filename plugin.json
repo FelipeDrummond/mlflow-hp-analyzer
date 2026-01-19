@@ -1,0 +1,15 @@
+{
+  "name": "mlflow-hp-analyzer",
+  "version": "0.1.0",
+  "description": "Claude Code plugin for conversational analysis of MLflow experiments and hyperparameter tuning runs",
+  "mcp": {
+    "servers": {
+      "mlflow-server": {
+        "command": "python",
+        "args": ["${CLAUDE_PLUGIN_ROOT}/mcp/mlflow-server/server.py"]
+      }
+    }
+  },
+  "skills": ["skills/hp-analysis"],
+  "commands": ["commands"]
+}
