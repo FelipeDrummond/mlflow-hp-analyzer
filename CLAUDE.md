@@ -13,10 +13,10 @@ This is a **Claude Code plugin** for conversational analysis of MLflow experimen
 pip install -r requirements-dev.txt
 
 # Install only runtime dependencies
-pip install -r src/mlflow_server/requirements.txt
+pip install -r mcp/mlflow-server/requirements.txt
 
 # Run the MCP server directly (for testing)
-python src/mlflow_server/server.py
+python mcp/mlflow-server/server.py
 
 # Install plugin locally
 claude plugin install .
@@ -48,7 +48,7 @@ export MLFLOW_TRACKING_URI="http://localhost:5000"
 
 This is a Claude Code plugin with three main components:
 
-### 1. MCP Server (`src/mlflow_server/server.py`)
+### 1. MCP Server (`mcp/mlflow-server/server.py`)
 Async Python server using the MCP SDK that exposes tools to Claude:
 - `list_experiments` - List all MLflow experiments
 - `get_experiment_runs` - Get runs with params/metrics as JSON
@@ -69,8 +69,7 @@ Encodes HP analysis expertise. Defines the structured response format and analys
 
 ## Plugin Configuration
 
-- `.claude-plugin/plugin.json` - Plugin manifest (name, version, paths)
-- `.mcp.json` - MCP server configuration with `${CLAUDE_PLUGIN_ROOT}` variable
+- `plugin.json` - Plugin manifest (name, version, MCP server paths, skills, commands)
 
 ## Key Patterns
 
