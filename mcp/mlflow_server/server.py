@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
-"""MCP server for MLflow hyperparameter analysis."""
+"""MCP server for MLflow hyperparameter analysis.
+
+Assumptions and Limitations:
+- All runs in an experiment are expected to have consistent parameter names.
+  Runs with different parameter sets will result in sparse DataFrames where
+  missing parameters are represented as NaN.
+- Correlation and importance analysis require numeric parameters. String
+  parameters are automatically filtered out.
+- Parameter importance requires at least 10 data points and 2+ numeric params.
+- The server connects to MLflow at startup; connection errors will cause
+  tool calls to fail with descriptive error messages.
+"""
 
 import os
 import json
