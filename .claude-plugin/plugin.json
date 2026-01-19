@@ -1,0 +1,15 @@
+{
+  "name": "mlflow-hp-analyzer",
+  "version": "0.1.0",
+  "description": "Conversational analysis of MLflow experiments and hyperparameter tuning runs",
+  "author": {
+    "name": "Felipe Drummond",
+    "url": "https://github.com/FelipeDrummond"
+  },
+  "repository": "https://github.com/FelipeDrummond/mlflow-hp-analyzer",
+  "license": "MIT",
+  "keywords": ["mlflow", "hyperparameter", "ml", "experiments", "analysis"],
+  "mcpServers": "./.mcp.json",
+  "skills": "./skills/",
+  "commands": "./commands/"
+}
