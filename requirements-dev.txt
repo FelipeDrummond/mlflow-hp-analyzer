@@ -1,5 +1,5 @@
 # Development dependencies
--r mcp/mlflow_server/requirements.txt
+-r src/mlflow_server/requirements.txt
 
 # Testing
 pytest>=7.0.0

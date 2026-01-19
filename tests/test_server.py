@@ -4,7 +4,7 @@ import json
 import pytest
 from unittest.mock import patch, MagicMock
 
-from mcp.mlflow_server.server import (
+from src.mlflow_server.server import (
     _runs_to_dataframe,
     list_tools,
     call_tool,
@@ -87,7 +87,7 @@ class TestCallTool:
     @pytest.mark.asyncio
     async def test_list_experiments(self, mock_experiment):
         """Test list_experiments tool."""
-        with patch("mcp.mlflow_server.server.client") as mock_client:
+        with patch("src.mlflow_server.server.client") as mock_client:
             mock_client.search_experiments.return_value = [mock_experiment]
 
             result = await call_tool("list_experiments", {})
@@ -100,7 +100,7 @@ class TestCallTool:
     @pytest.mark.asyncio
     async def test_get_experiment_runs(self, mock_experiment, mock_runs):
         """Test get_experiment_runs tool."""
-        with patch("mcp.mlflow_server.server.client") as mock_client:
+        with patch("src.mlflow_server.server.client") as mock_client:
             mock_client.get_experiment_by_name.return_value = mock_experiment
             mock_client.search_runs.return_value = mock_runs
 
@@ -116,7 +116,7 @@ class TestCallTool:
     @pytest.mark.asyncio
     async def test_get_experiment_runs_not_found(self):
         """Test get_experiment_runs with non-existent experiment."""
-        with patch("mcp.mlflow_server.server.client") as mock_client:
+        with patch("src.mlflow_server.server.client") as mock_client:
             mock_client.get_experiment_by_name.return_value = None
 
             result = await call_tool(
@@ -129,7 +129,7 @@ class TestCallTool:
     @pytest.mark.asyncio
     async def test_get_best_runs(self, mock_experiment, mock_runs):
         """Test get_best_runs tool."""
-        with patch("mcp.mlflow_server.server.client") as mock_client:
+        with patch("src.mlflow_server.server.client") as mock_client:
             mock_client.get_experiment_by_name.return_value = mock_experiment
             mock_client.search_runs.return_value = mock_runs[:1]
 
@@ -149,7 +149,7 @@ class TestCallTool:
     @pytest.mark.asyncio
     async def test_get_metric_history(self, mock_metric_history):
         """Test get_metric_history tool."""
-        with patch("mcp.mlflow_server.server.client") as mock_client:
+        with patch("src.mlflow_server.server.client") as mock_client:
             mock_client.get_metric_history.return_value = mock_metric_history
 
             result = await call_tool(
@@ -172,7 +172,7 @@ class TestCallTool:
     @pytest.mark.asyncio
     async def test_error_handling(self):
         """Test that errors are caught and returned."""
-        with patch("mcp.mlflow_server.server.client") as mock_client:
+        with patch("src.mlflow_server.server.client") as mock_client:
             mock_client.search_experiments.side_effect = Exception("Connection failed")
 
             result = await call_tool("list_experiments", {})

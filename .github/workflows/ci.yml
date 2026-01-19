@@ -68,4 +68,4 @@ jobs:
         if: matrix.python-version == '3.11'
         run: |
           pip install pytest-cov
-          pytest tests/ -v --cov=mcp --cov-report=term-missing
+          pytest tests/ -v --cov=src --cov-report=term-missing
